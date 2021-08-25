@@ -61,40 +61,47 @@ function run() {
                     const form = new form_data_1.default();
                     form.append('id', `${gh.context.repo.owner}/${gh.context.repo.repo}`);
                     form.append('secret', auth);
-                    yield new Promise(r => form.submit(`http://${host}:${port}${path}`, (err, res) => {
-                        if (err)
-                            throw err;
-                        res.resume();
-                        core.debug(`Got response code ${res.statusCode}`);
-                        if (res.statusCode === 200) {
-                            trying = false;
-                        }
-                        else if (res.statusCode === 403) {
-                            core.setFailed('The authorization token is invalid');
-                            trying = false;
-                        }
-                        else if (res.statusCode === 500) {
-                            let allData = '';
-                            res.on('data', chunk => {
-                                allData += chunk;
-                            });
-                            res.on('end', () => {
-                                core.setFailed(`Error from server: ${allData}`);
-                            });
-                            trying = false;
-                        }
-                        else if (res.statusCode !== 299 && res.statusCode !== 202) {
-                            let allData = '';
-                            res.on('data', chunk => {
-                                allData += chunk;
-                            });
-                            res.on('end', () => {
-                                core.setFailed(`Error unrecognized code ${res.statusCode}: ${allData}`);
-                            });
-                            trying = false;
-                        }
-                        r();
-                    }));
+                    yield new Promise(r => {
+                        form.submit(`http://${host}:${port}${path}`, (err, res) => {
+                            if (err) {
+                                if (err.name === 'ECONNREFUSED') {
+                                    r();
+                                    return;
+                                }
+                                throw err;
+                            }
+                            res.resume();
+                            core.debug(`Got response code ${res.statusCode}`);
+                            if (res.statusCode === 200) {
+                                trying = false;
+                            }
+                            else if (res.statusCode === 403) {
+                                core.setFailed('The authorization token is invalid');
+                                trying = false;
+                            }
+                            else if (res.statusCode === 500) {
+                                let allData = '';
+                                res.on('data', chunk => {
+                                    allData += chunk;
+                                });
+                                res.on('end', () => {
+                                    core.setFailed(`Error from server: ${allData}`);
+                                });
+                                trying = false;
+                            }
+                            else if (res.statusCode !== 299 && res.statusCode !== 202) {
+                                let allData = '';
+                                res.on('data', chunk => {
+                                    allData += chunk;
+                                });
+                                res.on('end', () => {
+                                    core.setFailed(`Error unrecognized code ${res.statusCode}: ${allData}`);
+                                });
+                                trying = false;
+                            }
+                            r();
+                        });
+                    });
                 }
                 catch (e) {
                     core.setFailed(`Failed to send webhook request: ${e}`);

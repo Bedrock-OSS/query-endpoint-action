@@ -23,9 +23,15 @@ async function run(): Promise<void> {
         const form = new FormData()
         form.append('id', `${gh.context.repo.owner}/${gh.context.repo.repo}`)
         form.append('secret', auth)
-        await new Promise<void>(r =>
+        await new Promise<void>(r => {
           form.submit(`http://${host}:${port}${path}`, (err, res) => {
-            if (err) throw err
+            if (err) {
+              if (err.name === 'ECONNREFUSED') {
+                r()
+                return
+              }
+              throw err
+            }
             res.resume()
             core.debug(`Got response code ${res.statusCode}`)
             if (res.statusCode === 200) {
@@ -56,7 +62,7 @@ async function run(): Promise<void> {
             }
             r()
           })
-        )
+        })
       } catch (e) {
         core.setFailed(`Failed to send webhook request: ${e}`)
         trying = false
