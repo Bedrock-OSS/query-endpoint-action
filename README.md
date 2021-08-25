@@ -2,7 +2,7 @@ tools.bedrock.dev server tool managment deploy action
 
 Your workflow should look like this:
 ```yaml
-- uses: @bedrock-oss/query-endpoint-action
+- uses: bedrock-oss/query-endpoint-action@main
   with:
     hostname: 'test.com'
     path: '/deploy'
