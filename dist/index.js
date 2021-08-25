@@ -64,7 +64,7 @@ function run() {
                     yield new Promise(r => {
                         form.submit(`http://${host}:${port}${path}`, (err, res) => {
                             if (err) {
-                                if (err.name === 'ECONNREFUSED') {
+                                if (err.message.includes('ECONNREFUSED')) {
                                     r();
                                     return;
                                 }

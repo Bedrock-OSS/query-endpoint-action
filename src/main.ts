@@ -26,7 +26,7 @@ async function run(): Promise<void> {
         await new Promise<void>(r => {
           form.submit(`http://${host}:${port}${path}`, (err, res) => {
             if (err) {
-              if (err.name === 'ECONNREFUSED') {
+              if (err.message.includes('ECONNREFUSED')) {
                 r()
                 return
               }
