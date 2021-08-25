@@ -1,0 +1,27 @@
+name: 'query-endpoint-action'
+description: 'Triggers a webhook when the action is run, and waits until the endpoint returns a 200 OK response to continue'
+author: '7dev7urandom'
+inputs:
+  hostname:
+    required: true
+    description: 'The destination of the webhook'
+  path:
+    required: true
+    description: 'The path of the hostname'
+  port:
+    required: true
+    description: 'The port of the webhook'
+  queryInterval:
+    required: false
+    description: 'How long to wait between query requests in milliseconds'
+    default: 2000
+  auth:
+    required: true
+    description: 'Authorization token'
+  timeout:
+    required: true
+    description: 'Time in seconds to wait before giving up'
+    default: 60
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
