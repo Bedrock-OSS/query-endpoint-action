@@ -4,7 +4,10 @@ Your workflow should look like this:
 ```yaml
 - uses: @bedrock-oss/query-endpoint-action
   with:
-    webhook: 'http://test.com:5000/webhook'
+    hostname: 'test.com'
+    path: '/deploy'
+    post: 5000
     queryInterval: 1000
     auth: 'QWERTY=='
     timeout: 5000
+```
