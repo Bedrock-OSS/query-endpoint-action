@@ -14,14 +14,14 @@ inputs:
   queryInterval:
     required: false
     description: 'How long to wait between query requests in milliseconds'
-    default: 2000
+    default: '2000'
   auth:
     required: true
     description: 'Authorization token'
   timeout:
     required: true
     description: 'Time in seconds to wait before giving up'
-    default: 60
+    default: '60'
 runs:
   using: 'node12'
   main: 'dist/index.js'
