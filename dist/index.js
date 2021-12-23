@@ -123,7 +123,8 @@ function run() {
                                     r();
                                     return;
                                 }
-                                else if (allData.toLowerCase().includes('success')) {
+                                else if (allData.toLowerCase().includes('running') ||
+                                    allData.toLowerCase().includes('stopped')) {
                                     trying = false;
                                     core.info(`Success! Job is done`);
                                     r();
